@@ -1,0 +1,101 @@
+<div class="notes-container">
+  <div class="header">
+    <h1>Notes</h1>
+    <div class="search-bar">
+      <input 
+        type="text" 
+        [(ngModel)]="searchText" 
+        placeholder="🔍 Search" 
+        class="search-input"
+      >
+      <button class="add-button" (click)="startEditing()">+ Add New Subject</button>
+    </div>
+  </div>
+
+  <div class="notes-table">
+    <!-- Table Header -->
+    <div class="table-header">
+      <div class="date-cell">Date</div>
+      <div class="subject-cell">Subject</div>
+      <div class="note-cell">Note</div>
+      <div class="favorite-cell">Favorite</div>
+      <div class="actions-cell">Action</div>
+    </div>
+
+    <!-- New Note Form -->
+    <div class="note-row new-note-row" *ngIf="isEditing">
+      <div class="date-cell">{{newNote.date}}</div>
+      <div class="subject-cell">
+        <input 
+          type="text" 
+          [(ngModel)]="newNote.subject" 
+          placeholder="Enter the Subject"
+          class="edit-input"
+        >
+      </div>
+      <div class="note-cell">
+        <input 
+          type="text" 
+          [(ngModel)]="newNote.note" 
+          placeholder="Enter note"
+          class="edit-input"
+        >
+      </div>
+      <div class="favorite-cell">
+        <button 
+          class="favorite-btn" 
+          [class.favorited]="newNote.favorite"
+          (click)="newNote.favorite = !newNote.favorite"
+        >
+          ★
+        </button>
+      </div>
+      <div class="actions-cell">
+        <button class="save-btn" (click)="addNote()">Save</button>
+        <button class="discard-btn" (click)="discardNote()">Discard</button>
+      </div>
+    </div>
+
+    <!-- Notes List -->
+    <div class="note-row" *ngFor="let note of filteredNotes; let i = index">
+      <div class="date-cell">{{note.date}}</div>
+      <div class="subject-cell">
+        <ng-container *ngIf="!note.isEditing">{{note.subject}}</ng-container>
+        <input 
+          *ngIf="note.isEditing"
+          type="text" 
+          [(ngModel)]="note.subject" 
+          class="edit-input"
+        >
+      </div>
+      <div class="note-cell">
+        <ng-container *ngIf="!note.isEditing">{{note.note}}</ng-container>
+        <input 
+          *ngIf="note.isEditing"
+          type="text" 
+          [(ngModel)]="note.note" 
+          class="edit-input"
+        >
+      </div>
+      <div class="favorite-cell">
+        <button 
+          class="favorite-btn" 
+          [class.favorited]="note.favorite"
+          (click)="toggleFavorite(i)"
+        >
+          ★
+        </button>
+      </div>
+      <div class="actions-cell">
+        <ng-container *ngIf="!note.isEditing">
+          <button class="edit-btn" (click)="editNote(i)">✎</button>
+          <button class="delete-btn" (click)="deleteNote(i)">🗑</button>
+        </ng-container>
+        <ng-container *ngIf="note.isEditing">
+          <button class="save-btn" (click)="saveEditedNote(i)">Save</button>
+          <button class="discard-btn" (click)="cancelEdit(i)">Cancel</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div> 
